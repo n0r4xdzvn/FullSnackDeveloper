@@ -159,6 +159,18 @@
       }
     }
 
+    @media screen and (max-width: 500px) and (-webkit-min-device-pixel-ratio: 2) {
+  body {
+    transform: scale(0.75);
+    transform-origin: top;
+    padding-bottom: 300px; /* tránh bị cắt */
+  }
+
+  .container {
+    max-width: 95%;
+  }
+}
+
     audio {
       display: none;
     }
