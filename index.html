@@ -2,17 +2,23 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>Parys</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <style>
-    body, html {
+    * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
+    }
+    
+    body, html {
       font-family: 'Quicksand', sans-serif;
       height: 100%;
-      overflow: hidden;
+      width: 100%;
+      overflow-x: hidden;
+      background-color: #000;
     }
 
     .background-gif {
@@ -24,6 +30,7 @@
       background: url('https://i.pinimg.com/originals/7d/33/c2/7d33c243485aa0dd8dd0d6ad5d0215db.gif') no-repeat center center fixed;
       background-size: cover;
       z-index: -1;
+      opacity: 0.8;
     }
 
     .intro-screen {
@@ -37,149 +44,378 @@
       justify-content: center;
       align-items: center;
       z-index: 1000;
-      transition: opacity 1s ease;
+      transition: opacity 1.2s ease, visibility 1.2s ease;
     }
 
     .intro-screen.hidden {
       opacity: 0;
-      pointer-events: none;
+      visibility: hidden;
     }
 
     .intro-button {
-      font-size: 24px;
-      padding: 20px 40px;
+      font-size: clamp(16px, 4vw, 22px);
+      padding: clamp(12px, 3vw, 18px) clamp(20px, 5vw, 35px);
       background: transparent;
       color: white;
-      font-weight: bold;
+      font-weight: 600;
       cursor: pointer;
-      border: none;
-      border-radius: 5px;
-      transition: transform 0.3s;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50px;
+      transition: all 0.4s ease;
+      letter-spacing: 2px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .intro-button:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: 0.5s;
     }
 
     .intro-button:hover {
       transform: scale(1.05);
+      background: rgba(255, 255, 255, 0.05);
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+    }
+
+    .intro-button:hover:before {
+      left: 100%;
     }
 
     .container {
-      max-width: 700px;
-      margin: auto;
-      margin-top: 50px;
-      background: rgba(0, 0, 0, 0.85);
-      padding: 30px;
+      width: 85%;
+      max-width: 500px; /* Reduced max-width for better fit */
+      margin: 20px auto;
+      background: rgba(0, 0, 0, 0.7);
+      padding: clamp(15px, 4vw, 25px);
       border-radius: 20px;
-      border: 2px solid #fff;
+      border: 1px solid rgba(255, 255, 255, 0.1);
       text-align: center;
       color: white;
-      box-shadow: 0 0 15px 5px rgba(255, 255, 255, 0.8);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
       position: relative;
       z-index: 1;
+      overflow-y: auto;
+      max-height: 85vh;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      display: none;
+    }
+
+    .avatar-container {
+      position: relative;
+      width: clamp(80px, 25vw, 120px);
+      height: clamp(80px, 25vw, 120px);
+      margin: 0 auto 20px;
     }
 
     .avatar {
-      width: 120px;
-      height: 120px;
+      width: 100%;
+      height: 100%;
       border-radius: 50%;
-      margin-bottom: 20px;
       object-fit: cover;
-      border: 5px solid #eee;
+      border: 3px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.3s ease;
+      filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
+    }
+
+    .avatar:hover {
+      transform: scale(1.05);
+      border-color: rgba(255, 255, 255, 0.5);
     }
 
     h1 {
-      font-size: 28px;
-      margin: 0;
+      font-size: clamp(18px, 4.5vw, 24px);
+      margin: 0 0 5px;
+      word-wrap: break-word;
+      font-weight: 700;
+      letter-spacing: 1px;
     }
 
     p.subtitle {
-      color: #aaa;
-      font-size: 16px;
-      margin-bottom: 30px;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: clamp(12px, 3.5vw, 14px);
+      margin-bottom: 25px;
+      font-weight: 400;
+    }
+
+    .divider {
+      width: 30px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+      margin: 0 auto 25px;
     }
 
     .section-title {
-      font-weight: bold;
-      font-size: 20px;
-      margin-top: 30px;
-      margin-bottom: 10px;
+      font-weight: 600;
+      font-size: clamp(14px, 4vw, 18px);
+      margin-bottom: 15px;
+      position: relative;
+      display: inline-block;
+    }
+
+    .section-title:after {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 25px;
+      height: 2px;
+      background: rgba(255, 255, 255, 0.3);
     }
 
     .grid-buttons {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 15px;
+      gap: 12px;
       margin-bottom: 30px;
     }
 
     .button {
-      background-color: #000;
-      border: 2px solid #444;
-      width: 150px;
+      background-color: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      width: 100%;
+      max-width: 140px; /* Reduced width for better fit */
       padding: 10px 0;
-      border-radius: 100px;
-      font-weight: bold;
-      font-size: 14px;
+      border-radius: 50px;
+      font-weight: 500;
+      font-size: clamp(11px, 3vw, 13px);
       color: white;
       text-align: center;
       cursor: pointer;
-      transition: 0.3s;
-      box-shadow: 0px 8px 16px -4px #000;
+      transition: all 0.3s ease;
       text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .button i {
-      margin-right: 8px;
+      margin-right: 6px;
+      font-size: clamp(14px, 3.5vw, 16px);
     }
 
     .button:hover {
-      background-color: #222;
-      transform: scale(1.05);
-      box-shadow: 0px 12px 24px rgba(0, 0, 0, 0.4);
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      border-color: rgba(255, 255, 255, 0.5);
+    }
+
+    /* Social media button specific styles - icons only, no backgrounds */
+    .button.instagram i {
+      color: #E1306C;
+    }
+    
+    .button.tiktok i {
+      color: #FE2C55;
+    }
+    
+    .button.facebook i {
+      color: #1877F2;
     }
 
     .description-box {
-      background-color: rgba(255, 255, 255, 0.1);
-      color: white;
+      background-color: rgba(255, 255, 255, 0.05);
+      color: rgba(255, 255, 255, 0.9);
       padding: 20px;
-      border-radius: 10px;
-      font-size: 15px;
-      line-height: 1.6;
-      margin-bottom: 30px;
-      border: 1px solid #fff;
-      box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.6);
-    }
-
-    @media (max-width: 768px) {
-      .grid-buttons {
-        flex-direction: column;
-      }
-      .button {
-        width: 100%;
-      }
+      border-radius: 16px;
+      font-size: clamp(12px, 3.5vw, 14px);
+      line-height: 1.7;
+      margin-bottom: 25px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      word-wrap: break-word;
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
     }
 
     audio {
       display: none;
     }
 
-	#snowflakeContainer{position:absolute;left:0px;top:0px;}
-	.snowflake{padding-left:15px;font-size:14px;line-height:24px;position:fixed;color:#ebebeb;user-select:none;z-index:1000;-moz-user-select:none;-ms-user-select:none;-khtml-user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;}
-	.snowflake:hover {cursor:default}
+    #snowflakeContainer {
+      position: absolute;
+      left: 0px;
+      top: 0px;
+      pointer-events: none;
+    }
+    
+    .snowflake {
+      padding-left: 15px;
+      font-size: 14px;
+      line-height: 24px;
+      position: fixed;
+      color: rgba(255, 255, 255, 0.8);
+      user-select: none;
+      z-index: 1000;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      -khtml-user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+      pointer-events: none;
+    }
 
+    .footer {
+      margin-top: 20px;
+      font-size: clamp(10px, 3vw, 12px);
+      color: rgba(255, 255, 255, 0.5);
+      word-wrap: break-word;
+    }
 
-</style>
-<div id='snowflakeContainer'>
-<p class='snowflake'>❆</p>
-</div>
-<script style='text/javascript'>
-	//<![CDATA[
-	var requestAnimationFrame=window.requestAnimationFrame||window.mozRequestAnimationFrame||window.webkitRequestAnimationFrame||window.msRequestAnimationFrame;var transforms=["transform","msTransform","webkitTransform","mozTransform","oTransform"];var transformProperty=getSupportedPropertyName(transforms);var snowflakes=[];var browserWidth;var browserHeight;var numberOfSnowflakes=50;var resetPosition=false;function setup(){window.addEventListener("DOMContentLoaded",generateSnowflakes,false);window.addEventListener("resize",setResetFlag,false)}setup();function getSupportedPropertyName(b){for(var a=0;a<b.length;a++){if(typeof document.body.style[b[a]]!="undefined"){return b[a]}}return null}function Snowflake(b,a,d,e,c){this.element=b;this.radius=a;this.speed=d;this.xPos=e;this.yPos=c;this.counter=0;this.sign=Math.random()<0.5?1:-1;this.element.style.opacity=0.5+Math.random();this.element.style.fontSize=4+Math.random()*30+"px"}Snowflake.prototype.update=function(){this.counter+=this.speed/5000;this.xPos+=this.sign*this.speed*Math.cos(this.counter)/40;this.yPos+=Math.sin(this.counter)/40+this.speed/30;setTranslate3DTransform(this.element,Math.round(this.xPos),Math.round(this.yPos));if(this.yPos>browserHeight){this.yPos=-50}};function setTranslate3DTransform(a,c,b){var d="translate3d("+c+"px, "+b+"px, 0)";a.style[transformProperty]=d}function generateSnowflakes(){var b=document.querySelector(".snowflake");var h=b.parentNode;browserWidth=document.documentElement.clientWidth;browserHeight=document.documentElement.clientHeight;for(var d=0;d<numberOfSnowflakes;d++){var j=b.cloneNode(true);h.appendChild(j);var e=getPosition(50,browserWidth);var a=getPosition(50,browserHeight);var c=5+Math.random()*40;var g=4+Math.random()*10;var f=new Snowflake(j,g,c,e,a);snowflakes.push(f)}h.removeChild(b);moveSnowflakes()}function moveSnowflakes(){for(var b=0;b<snowflakes.length;b++){var a=snowflakes[b];a.update()}if(resetPosition){browserWidth=document.documentElement.clientWidth;browserHeight=document.documentElement.clientHeight;for(var b=0;b<snowflakes.length;b++){var a=snowflakes[b];a.xPos=getPosition(50,browserWidth);a.yPos=getPosition(50,browserHeight)}resetPosition=false}requestAnimationFrame(moveSnowflakes)}function getPosition(b,a){return Math.round(-1*b+Math.random()*(a+2*b))}function setResetFlag(a){resetPosition=true};
-	//]]>
-</script>
+    .footer__copy a {
+      color: rgba(255, 255, 255, 0.8);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .footer__copy a:hover {
+      color: white;
+    }
+
+    /* Audio control slider */
+    .audio-control {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      color: white;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 100;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .audio-control:hover {
+      background: rgba(0, 0, 0, 0.6);
+      transform: scale(1.1);
+    }
+
+    .audio-control i {
+      font-size: 16px;
+      transition: all 0.3s ease;
+    }
+
+    /* Volume slider */
+    .volume-slider-container {
+      position: fixed;
+      bottom: 70px;
+      right: 20px;
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      width: 35px;
+      height: 120px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      opacity: 0;
+      transform: translateY(20px);
+      visibility: hidden;
+      transition: all 0.3s ease;
+      padding: 15px 0;
+    }
+
+    .volume-slider-container.visible {
+      opacity: 1;
+      transform: translateY(0);
+      visibility: visible;
+    }
+
+    .volume-slider {
+      -webkit-appearance: none;
+      width: 100px;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.2);
+      outline: none;
+      border-radius: 2px;
+      transform: rotate(-90deg);
+    }
+
+    .volume-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 12px;
+      height: 12px;
+      background: white;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    .volume-slider::-moz-range-thumb {
+      width: 12px;
+      height: 12px;
+      background: white;
+      border-radius: 50%;
+      cursor: pointer;
+      border: none;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 480px) {
+      .container {
+        width: 92%;
+        margin: 10px auto;
+        padding: 15px;
+      }
+      
+      .grid-buttons {
+        gap: 8px;
+      }
+      
+      .button {
+        max-width: 120px;
+        padding: 8px 0;
+      }
+      
+      .audio-control {
+        bottom: 15px;
+        right: 15px;
+        width: 35px;
+        height: 35px;
+      }
+
+      .volume-slider-container {
+        bottom: 60px;
+        right: 15px;
+        height: 100px;
+      }
+    }
+
+    /* Larger screens */
+    @media (min-width: 1200px) {
+      .container {
+        max-width: 450px; /* Even smaller for large screens to match the 75% zoom effect */
+        padding: 25px;
+      }
+      
+      body {
+        font-size: 14px; /* Slightly smaller base font size for large screens */
+      }
+    }
   </style>
 </head>
 <body>
-
   <div class="background-gif"></div>
 
   <div class="intro-screen" id="introScreen">
@@ -190,16 +426,28 @@
     <source src="musicbg.mp3" type="audio/mpeg">
   </audio>
 
-  <div class="container" id="mainContent" style="display: none;">
-    <img class="avatar" src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExOGVhajJueWYzMGE5eGVvZGRlZmZnbnRldDJ4NzN5M2MwZTRwZjNlaiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/M7SB5WaKUqodgXIDzH/giphy.gif" alt="Avatar"/>
+  <div class="audio-control" id="audioControl" onclick="toggleAudioControls()">
+    <i class="fas fa-volume-up" id="audioIcon"></i>
+  </div>
+
+  <div class="volume-slider-container" id="volumeSliderContainer">
+    <input type="range" min="0" max="1" step="0.01" value="0.5" class="volume-slider" id="volumeSlider">
+  </div>
+
+  <div class="container" id="mainContent">
+    <div class="avatar-container">
+      <img class="avatar" src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExOGVhajJueWYzMGE5eGVvZGRlZmZnbnRldDJ4NzN5M2MwZTRwZjNlaiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/M7SB5WaKUqodgXIDzH/giphy.gif" alt="Avatar"/>
+    </div>
     <h1>NGUYEN QUOC CUONG</h1>
     <p class="subtitle">Quoc Cuong Aka Parys</p>
+    
+    <div class="divider"></div>
 
     <div class="section-title">Contact</div>
     <div class="grid-buttons">
-      <a class="button" href="https://www.instagram.com/qcakaparys" target="_blank"><i class="fab fa-instagram"></i>Instagram</a>
-      <a class="button" href="https://www.tiktok.com/@parys4u" target="_blank"><i class="fab fa-tiktok"></i>TikTok</a>
-      <a class="button" href="https://www.facebook.com/parysdasick" target="_blank"><i class="fab fa-facebook"></i>Facebook</a>
+      <a class="button instagram" href="https://www.instagram.com/qcakaparys" target="_blank"><i class="fab fa-instagram"></i>Instagram</a>
+      <a class="button tiktok" href="https://www.tiktok.com/@parys4u" target="_blank"><i class="fab fa-tiktok"></i>TikTok</a>
+      <a class="button facebook" href="https://www.facebook.com/parysdasick" target="_blank"><i class="fab fa-facebook"></i>Facebook</a>
     </div>
 
     <div class="section-title">About Me</div>
@@ -208,28 +456,193 @@
       Tôi sinh ngày 29/11<br>
       Không có gì để giới thiệu.
     </div>
-          <!--=============== FOOTER ===============-->
-          <footer class="footer container">
-            <span class="footer__copy"> &#169; <b><a href="https://www.facebook.com/photo?fbid=664879729800202&set=a.131952953092885">Inc - 1x4</a></b> Fix  |  All rights reserved.</span>
-          </footer>
+    
+    <footer class="footer">
+      <span class="footer__copy"> &#169; <b><a href="https://www.facebook.com/photo?fbid=664879729800202&set=a.131952953092885">Inc - 1x4</a></b> Fix  |  All rights reserved.</span>
+    </footer>
+  </div>
+
+  <div id='snowflakeContainer'>
+    <p class='snowflake'>❆</p>
   </div>
 
   <script>
+    var audioPlaying = false;
+    var volumeControlVisible = false;
+    
     function enterSite() {
       const intro = document.getElementById('introScreen');
       const main = document.getElementById('mainContent');
       const audio = document.getElementById('backgroundAudio');
+      const audioControl = document.getElementById('audioControl');
 
       intro.classList.add('hidden');
 
       setTimeout(() => {
         main.style.display = 'block';
-        intro.remove();
-      }, 1000);
+        audioControl.style.display = 'flex';
+        
+        // Set initial volume
+        audio.volume = 0.5;
+        document.getElementById('volumeSlider').value = 0.5;
+        
+        // Try to play audio but don't force it (browsers may block autoplay)
+        audio.play().then(() => {
+          audioPlaying = true;
+        }).catch(err => {
+          console.warn("Audio autoplay blocked:", err);
+          audioPlaying = false;
+          document.getElementById('audioIcon').className = 'fas fa-volume-mute';
+        });
+      }, 1200);
+    }
+    
+    function toggleAudioControls() {
+      const volumeSlider = document.getElementById('volumeSliderContainer');
+      
+      if (volumeControlVisible) {
+        volumeSlider.classList.remove('visible');
+        volumeControlVisible = false;
+      } else {
+        volumeSlider.classList.add('visible');
+        volumeControlVisible = true;
+      }
+    }
+    
+    // Set up volume slider
+    document.getElementById('volumeSlider').addEventListener('input', function(e) {
+      const audio = document.getElementById('backgroundAudio');
+      const audioIcon = document.getElementById('audioIcon');
+      const volume = parseFloat(e.target.value);
+      
+      audio.volume = volume;
+      
+      // Update icon based on volume level
+      if (volume === 0) {
+        audioIcon.className = 'fas fa-volume-mute';
+        audioPlaying = false;
+        audio.pause();
+      } else {
+        if (!audioPlaying) {
+          audio.play().catch(err => {
+            console.warn("Audio play failed:", err);
+          });
+          audioPlaying = true;
+        }
+        
+        if (volume < 0.5) {
+          audioIcon.className = 'fas fa-volume-down';
+        } else {
+          audioIcon.className = 'fas fa-volume-up';
+        }
+      }
+    });
 
-      audio.play().catch(err => {
-        console.warn("Audio autoplay blocked:", err);
-      });
+    // Snowflake animation
+    var requestAnimationFrame = window.requestAnimationFrame || 
+                                window.mozRequestAnimationFrame || 
+                                window.webkitRequestAnimationFrame || 
+                                window.msRequestAnimationFrame;
+    
+    var transforms = ["transform", "msTransform", "webkitTransform", "mozTransform", "oTransform"];
+    var transformProperty = getSupportedPropertyName(transforms);
+    var snowflakes = [];
+    var browserWidth;
+    var browserHeight;
+    var numberOfSnowflakes = 25; // Reduced for minimal design
+    var resetPosition = false;
+
+    function setup() {
+      window.addEventListener("DOMContentLoaded", generateSnowflakes, false);
+      window.addEventListener("resize", setResetFlag, false);
+    }
+    setup();
+
+    function getSupportedPropertyName(b) {
+      for (var a = 0; a < b.length; a++) {
+        if (typeof document.body.style[b[a]] != "undefined") {
+          return b[a];
+        }
+      }
+      return null;
+    }
+
+    function Snowflake(b, a, d, e, c) {
+      this.element = b;
+      this.radius = a;
+      this.speed = d;
+      this.xPos = e;
+      this.yPos = c;
+      this.counter = 0;
+      this.sign = Math.random() < 0.5 ? 1 : -1;
+      this.element.style.opacity = 0.3 + Math.random() * 0.4; // More subtle opacity
+      this.element.style.fontSize = 4 + Math.random() * 16 + "px"; // Smaller size range
+    }
+
+    Snowflake.prototype.update = function() {
+      this.counter += this.speed / 5000;
+      this.xPos += this.sign * this.speed * Math.cos(this.counter) / 40;
+      this.yPos += Math.sin(this.counter) / 40 + this.speed / 30;
+      setTranslate3DTransform(this.element, Math.round(this.xPos), Math.round(this.yPos));
+      if (this.yPos > browserHeight) {
+        this.yPos = -50;
+      }
+    };
+
+    function setTranslate3DTransform(a, c, b) {
+      var d = "translate3d(" + c + "px, " + b + "px, 0)";
+      a.style[transformProperty] = d;
+    }
+
+    function generateSnowflakes() {
+      var b = document.querySelector(".snowflake");
+      var h = b.parentNode;
+      browserWidth = document.documentElement.clientWidth;
+      browserHeight = document.documentElement.clientHeight;
+      
+      for (var d = 0; d < numberOfSnowflakes; d++) {
+        var j = b.cloneNode(true);
+        h.appendChild(j);
+        var e = getPosition(50, browserWidth);
+        var a = getPosition(50, browserHeight);
+        var c = 5 + Math.random() * 25; // Reduced max speed
+        var g = 4 + Math.random() * 6;  // Reduced max radius
+        var f = new Snowflake(j, g, c, e, a);
+        snowflakes.push(f);
+      }
+      
+      h.removeChild(b);
+      moveSnowflakes();
+    }
+
+    function moveSnowflakes() {
+      for (var b = 0; b < snowflakes.length; b++) {
+        var a = snowflakes[b];
+        a.update();
+      }
+      
+      if (resetPosition) {
+        browserWidth = document.documentElement.clientWidth;
+        browserHeight = document.documentElement.clientHeight;
+        
+        for (var b = 0; b < snowflakes.length; b++) {
+          var a = snowflakes[b];
+          a.xPos = getPosition(50, browserWidth);
+          a.yPos = getPosition(50, browserHeight);
+        }
+        
+        resetPosition = false;
+      }
+      
+      requestAnimationFrame(moveSnowflakes);
+    }
+
+    function getPosition(b, a) {
+      return Math.round(-1 * b + Math.random() * (a + 2 * b));
+    }
+
+    function setResetFlag(a) {
+      resetPosition = true;
     }
   </script>
 </body>
